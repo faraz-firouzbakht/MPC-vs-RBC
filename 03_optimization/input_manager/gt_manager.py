@@ -11,17 +11,12 @@ class GroundTruthManager:
     """
 
     def __init__(self, config: dict):
-        """
-        Parameters
-        ----------
-        buildings : list of str
-            List of building identifiers.
-        mpc_freqs : list of int
-            List of MPC update intervals in minutes.
-        """
         self.buildings = config['optimization']['buildings']
         self.mpc_freqs = config['optimization']['mpc_update_freq']
-        self.gt_freq = config['optimization']['gt_freq']  # Ground truth frequency in minutes
+        self.gt_freq = config['optimization']['gt_freq']  
+        
+        # --- FIX 1: Dynamically get the path from config (default to 1min if not provided) ---
+        self.gt_path = config['optimization'].get('gt_path', '01_data/prosumption_data/1min')
 
         self.start_time = pd.Timestamp(config['optimization']['start_time'])
         self.end_time = pd.Timestamp(config['optimization']['end_time'])
@@ -29,7 +24,7 @@ class GroundTruthManager:
         self.mpc_horizon = config['optimization']['mpc_horizon']
 
         self._dfs = {}
-        self._cache = {}  # cache[(building, freq)] -> resampled df
+        self._cache = {}  
 
 
         self._load_gt()  
@@ -37,19 +32,15 @@ class GroundTruthManager:
 
 
     def _load_gt(self):        
-
-        # Load each building's fine-resolution DataFrame
         for b in self.buildings:
             num_pv_modules, orientation = self.map_building_to_pv_num_orientation(b)
 
-            # Always load 1min data here because we resample in get_gt()
-            path = f'01_data/prosumption_data/1min/prosumption_{b}_num_pv_modules_{num_pv_modules}_pv_{orientation}_hp_1.0.csv'
-
+            # --- FIX 2: Use the dynamic path from the config instead of hardcoding '1min' ---
+            path = f'{self.gt_path}/prosumption_{b}_num_pv_modules_{num_pv_modules}_pv_{orientation}_hp_1.0.csv'
 
             df = load_chunks(path, self.start_time, self.end_time + pd.Timedelta(hours=self.mpc_horizon - 1), filter_col='index', parse_dates=['index'], usecols=['index', 'P_TOT'])
             df['P_TOT'] = df['P_TOT'] / 1000.0  # Convert from W to kW
 
-            # Ensure a datetime index
             if not isinstance(df.index, pd.DatetimeIndex):
                 raise ValueError(f"GT file for '{b}' must have a DatetimeIndex")
             
@@ -58,31 +49,21 @@ class GroundTruthManager:
         
 
     def _validate_freq(self):
-        """
-        Ensure mpc_freqs (in minutes) are all multiples of the base frequency.
-        """
-
-        # Infer base frequency in minutes from the first building (assumes all use same base frequency)
         freqs = (self._dfs[self.buildings[0]].index.to_series().diff().dropna().unique())
         if len(freqs) != 1:
-            raise ValueError(f"GT for '{self.buildings[0]}' has irregular timestamps. Maybe the ground truth does not cover the full optimization horizon.")
-        self.base_freq_min = int(freqs[0].seconds // 60)
+            raise ValueError(f"GT for '{self.buildings[0]}' has irregular timestamps.")
+        
+        # --- FIX 3: Calculate in seconds instead of minutes to prevent Division-by-Zero ---
+        base_freq_sec = int(freqs[0].total_seconds())
 
         for mpc_freq in self.mpc_freqs:
-            if mpc_freq % self.base_freq_min != 0:
+            # mpc_freq is in minutes, so we multiply by 60 to compare in seconds
+            if (mpc_freq * 60) % base_freq_sec != 0:
                 raise ValueError(
-                    f"mpc_freq={mpc_freq}min is not a multiple of base GT freq={self.base_freq_min}min"
+                    f"mpc_freq={mpc_freq}min is not a multiple of base GT freq={base_freq_sec}sec"
                 )
             
     def get_gt(self, building):
-        """
-        Return the GT for `building` resampled to `gt_freq` minutes.
-
-        Parameters
-        ----------
-        building : str
-            Building identifier.
-        """
         if building not in self._dfs:
             raise KeyError(f"Unknown building '{building}'")
 
@@ -90,9 +71,13 @@ class GroundTruthManager:
 
         if key not in self._cache:
             df_fine = self._dfs[building]
-            rule = f"{self.gt_freq}min"
+            
+            # --- FIX 4: Check if gt_freq is an integer (minutes) or a string (like '10S') ---
+            if isinstance(self.gt_freq, int) or str(self.gt_freq).isdigit():
+                rule = f"{self.gt_freq}min"
+            else:
+                rule = str(self.gt_freq)
 
-            # Resampling based on 1min to eg 15min. 15min values are similar to 15min GT data in 01_data/prosumption_data
             df_rs = (df_fine
                     .resample(rule)   
                     .mean()
@@ -102,18 +87,7 @@ class GroundTruthManager:
         return self._cache[key]
         
         
-
-    def map_building_to_pv_num_orientation(self, b): # TODO: Use from Utils
-        """
-        Maps a building string to the number of PV modules and orientation used. Right now, this is a hardcoded mapping.
-        Once the GT data is changed (eg. change pv orientation or scaling), this function needs to be adapted accordingly!
-
-        Returns
-        -------
-        tuple
-            (num_pv_modules, orientation) with orientation representing the pv orientation, i.e. 'SOUTH', 'EAST', 'WEST'.
-        """
-
+    def map_building_to_pv_num_orientation(self, b): 
         mapper = {
             'SFH3': (26, 'SOUTH'),
             'SFH4': (30, 'SOUTH'),
@@ -139,7 +113,3 @@ class GroundTruthManager:
         
         num_pv_modules, orientation = mapper[b]
         return num_pv_modules, orientation
-
-
-
-

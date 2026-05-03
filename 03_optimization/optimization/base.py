@@ -36,7 +36,18 @@ class BaseOptimizer(ABC):
         
         self.mpc_freq = mpc_freq  # MPC frequency in minutes
         self.t_inc = self.mpc_freq / 60  # Convert minutes to hours
-        self.gt_inc = gt_freq / 60 # frequency of ground truth data in hours
+
+        # --- FIXED: Dynamically calculate hour fraction for both strings and ints ---
+        if isinstance(gt_freq, str):
+            if 's' in gt_freq.lower():
+                self.gt_inc = float(gt_freq.lower().replace('s', '')) / 3600.0
+            elif 'min' in gt_freq.lower():
+                self.gt_inc = float(gt_freq.lower().replace('min', '')) / 60.0
+            else:
+                self.gt_inc = float(gt_freq) / 60.0
+        else:
+            self.gt_inc = gt_freq / 60.0 # legacy behavior (minutes)
+            
 
         self.param_assumption = param_assumption  # Assumption for parametric forecasts, e.g., 'normal', 'sum2gaussian', etc.
         

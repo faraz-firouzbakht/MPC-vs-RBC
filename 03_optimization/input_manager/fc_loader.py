@@ -19,6 +19,9 @@ class ForecastLoader:
         self.fc_creation_time = pd.Timestamp(config['forecasts']['fc_creation_time'])
         self.parametric_assumption = config['forecasts']['parametric_assumption']
 
+        # --- FIX 1: Dynamically grab the path from the config file ---
+        self.fc_path = config['forecasts'].get('fc_path', '02_forecast/mount/storage_param_fc')
+
         self.start_time = pd.Timestamp(config['optimization']['start_time'])
         self.end_time = pd.Timestamp(config['optimization']['end_time'])
         self.minutes = (self.end_time - self.start_time).total_seconds() / 60
@@ -38,7 +41,34 @@ class ForecastLoader:
 
     
     def _forecast_path(self, building: str, mpc_freq: int) -> str:
-        path = f"02_forecast/mount/storage_param_fc/{building}/{self.fc_creation_time.strftime('%Y-%m-%d_%H-%M-%S')}/file_fc_parametric_{self.fc_model}_{building}_{self.fc_creation_time.strftime('%Y-%m-%d_%H-%M-%S')}_freq{mpc_freq}.csv"
+        base_path = self.fc_path.rstrip('/') 
+        folder_path = f"{base_path}/{building}/{self.fc_creation_time.strftime('%Y-%m-%d_%H-%M-%S')}"
+        
+        print("\n" + "="*40)
+        print("--- DEBUG SCANNER START ---")
+        print(f"1. Target Folder: {folder_path}")
+        print(f"2. Does this folder exist? -> {os.path.exists(folder_path)}")
+        
+        if os.path.exists(folder_path):
+            files = os.listdir(folder_path)
+            print(f"3. Yes! Files inside: {files}")
+            for filename in files:
+                if f"freq{mpc_freq}" in filename:
+                    print(f"4. BINGO! Matched file: {filename}")
+                    print("="*40 + "\n")
+                    return f"{folder_path}/{filename}"
+        else:
+            parent_folder = f"{base_path}/{building}"
+            print(f"3. No! Let's check the parent folder instead: {parent_folder}")
+            if os.path.exists(parent_folder):
+                print(f"4. Parent exists! The folders inside SFH4 are actually: {os.listdir(parent_folder)}")
+            else:
+                print("4. Parent doesn't exist either! Are you disconnected from the server/VPN?")
+        print("--- DEBUG SCANNER END ---")
+        print("="*40 + "\n")
+                    
+        # Fallback to the original logic if not found
+        path = f"{folder_path}/file_fc_parametric_{self.fc_model}_{building}_{self.fc_creation_time.strftime('%Y-%m-%d_%H-%M-%S')}_freq{mpc_freq}.csv"
         return path
 
 
@@ -87,6 +117,7 @@ class ForecastLoader:
             df['std2'] = df['std2'] / 1000.0
         elif self.parametric_assumption == 'expected_value':
             df['expected_value'] = df['expected_value'] / 1000.0
+            
         else:
             raise ValueError(f"Rescaling for {self.parametric_assumption} is not yet implemented.")
 

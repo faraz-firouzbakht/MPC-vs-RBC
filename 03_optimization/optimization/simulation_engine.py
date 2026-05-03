@@ -30,7 +30,19 @@ class SimulationEngine:
         self.gt_full = gt_full
         self.building = building
         self.mpc_delta = timedelta(minutes=mpc_freq)
-        self.gt_delta = timedelta(minutes=gt_delta)
+        
+        # --- FIXED: Dynamically create timedelta for both seconds and minutes ---
+        if isinstance(gt_delta, str):
+            if 's' in gt_delta.lower():
+                val = float(gt_delta.lower().replace('s', ''))
+                self.gt_delta = timedelta(seconds=val)
+            elif 'min' in gt_delta.lower():
+                val = float(gt_delta.lower().replace('min', ''))
+                self.gt_delta = timedelta(minutes=val)
+            else:
+                self.gt_delta = timedelta(minutes=float(gt_delta))
+        else:
+            self.gt_delta = timedelta(minutes=gt_delta) # legacy behavior
 
 
 
