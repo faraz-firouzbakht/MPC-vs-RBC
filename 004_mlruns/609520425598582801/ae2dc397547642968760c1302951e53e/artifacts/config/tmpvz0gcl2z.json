@@ -1,0 +1,39 @@
+{
+  "mlflow_experiment_name": "MPC_Averaged_Baseline",
+  "forecasts": {
+    "model": "AutoKAN",
+    "fc_creation_time": "2025-08-17T10:13:28+00:00",
+    "parametric_assumption": "sum2gaussian",
+    "fc_update_freq": 60,
+    "fc_path": "/Volumes/iai-projects/iai-aida/Daten_Pinter/forecasts_interval_scheduling/storage_param_fc"
+  },
+  "optimization": {
+    "buildings": [
+      "SFH4"
+    ],
+    "models": [
+      "ideal",
+      "rbc"
+    ],
+    "start_time": "2020-07-20T00:00:00+00:00",
+    "end_time": "2020-07-27T00:00:00+00:00",
+    "gt_freq": "15min",
+    "gt_path": "01_data/prosumption_data/10sec",
+    "mpc_update_freq": [
+      15
+    ],
+    "mpc_horizon": 24,
+    "prices": "tou_prices.csv",
+    "objective": "linear"
+  },
+  "battery": {
+    "capacity_min": 0.0,
+    "capacity_max": 13.8,
+    "power_min": -5.0,
+    "power_max": 5.0,
+    "charge_efficiency": 0.98,
+    "discharge_efficiency": 0.98,
+    "c_bat_deg": 0.084,
+    "soe_initial": 4.0
+  }
+}

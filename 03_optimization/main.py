@@ -1,6 +1,7 @@
 import json
 import os
 import mlflow
+from networkx import config
 import pandas as pd
 from datetime import datetime
 from pathlib import Path
@@ -94,7 +95,17 @@ def main(config_path: str):
                     gt_delta = gt_manager.gt_freq  # Use the GT frequency from the manager
 
 
-                    optimizer = OptClass(battery_cfg=config['battery'], mpc_freq=mpc_freq, gt_freq=gt_delta, param_assumption=config['forecasts']['parametric_assumption'], prices=prices, building=b, objective=objective)
+                    optimizer = OptClass(
+                        battery_cfg=config['battery'], 
+                        mpc_freq=mpc_freq, 
+                        gt_freq=gt_delta, 
+                        param_assumption=config['forecasts']['parametric_assumption'], 
+                        prices=prices, 
+                        building=b, 
+                        objective=objective,
+                        gt_path=config['optimization'].get('gt_path') 
+                        )
+                    
                     fc_manager = ForecastManager(building=b, mpc_freq=mpc_freq, loader=fc_loader)
 
 
@@ -153,7 +164,8 @@ def main(config_path: str):
 
 
                             # ---- evaluate & log metrics
-                            ev = Evaluator(df_run, prices)
+                            #battery_cfg added to ev for cost calculations that depend on battery characteristics (e.g. degradation costs)
+                            ev = Evaluator(df_run, prices, battery_cfg=config['battery'])
                             costs_summary = ev.get_costs()
                             print(f"Costs summary for building {b} with model {opt_name} and MPC frequency {mpc_freq}: {costs_summary}")
                             mlflow.log_metrics({**costs_summary})

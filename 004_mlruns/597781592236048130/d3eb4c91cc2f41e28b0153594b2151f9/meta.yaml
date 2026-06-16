@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/farazfirouzbakht/Desktop/Programming/MPC-vs-RBC/MPC-vs-RBC/mlruns/597781592236048130/d3eb4c91cc2f41e28b0153594b2151f9/artifacts
+end_time: 1776861927553
+entry_point_name: ''
+experiment_id: '597781592236048130'
+lifecycle_stage: active
+run_id: d3eb4c91cc2f41e28b0153594b2151f9
+run_name: mpc_det_rule_constGrid_freq-60_building-SFH3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1776861481856
+status: 3
+tags: []
+user_id: farazfirouzbakht

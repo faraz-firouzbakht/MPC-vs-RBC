@@ -8,7 +8,7 @@ class BaseOptimizer(ABC):
     Abstract base class for rolling-horizon optimizers.
     """
 
-    def __init__(self, battery_cfg: dict, mpc_freq: int, gt_freq: int, prices, objective: str, building, param_assumption: str = None):
+    def __init__(self, battery_cfg: dict, mpc_freq: int, gt_freq: int, prices, objective: str, building, param_assumption: str = None, **kwargs):
         """
         Initialize the optimizer.
         """

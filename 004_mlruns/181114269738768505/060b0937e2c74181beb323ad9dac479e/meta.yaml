@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/farazfirouzbakht/Desktop/Programming/MPC-vs-RBC/MPC-vs-RBC/mlruns/181114269738768505/060b0937e2c74181beb323ad9dac479e/artifacts
+end_time: 1777297386082
+entry_point_name: ''
+experiment_id: '181114269738768505'
+lifecycle_stage: active
+run_id: 060b0937e2c74181beb323ad9dac479e
+run_name: batch_2026-04-27_15-43
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777297386069
+status: 4
+tags: []
+user_id: farazfirouzbakht

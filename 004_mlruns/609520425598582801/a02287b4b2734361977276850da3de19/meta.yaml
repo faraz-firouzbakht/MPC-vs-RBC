@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/farazfirouzbakht/Desktop/Programming/MPC-vs-RBC/MPC-vs-RBC/mlruns/609520425598582801/a02287b4b2734361977276850da3de19/artifacts
+end_time: 1777900468794
+entry_point_name: ''
+experiment_id: '609520425598582801'
+lifecycle_stage: active
+run_id: a02287b4b2734361977276850da3de19
+run_name: rule-based_freq-15_building-SFH4
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777900468697
+status: 3
+tags: []
+user_id: farazfirouzbakht

@@ -1,22 +1,29 @@
 {
-    "mlflow_experiment_name": "MPC_10sec_Challenge",
+    "mlflow_experiment_name": "MPC_Averaged_Baseline",
 
-    "forecasts": {
+"forecasts": {
         "model": "AutoKAN",
-        "fc_creation_time": "2025-08-17T10:13:28+00:00",
+        "fc_creation_time": "2025-08-14T09:03:44+00:00",
         "parametric_assumption": "sum2gaussian",
         "fc_update_freq": 60,
-        "fc_path": "/Volumes/iai-projects/iai-aida/Daten_Pinter/forecasts_interval_scheduling/storage_param_fc"
+        "fc_path": "/home/ws/uliig/IAI_Project/MPC-vs-RBC/02_forecast/mount/storage_param_fc"
     },
 
-    "optimization": {
-        "buildings": ["SFH4"],
-        "models": ["mpc_det_rule_constGrid"], 
-        "start_time": "2020-07-20T04:00:00+00:00",
-        "end_time": "2020-07-21T04:00:00+00:00", 
-        "gt_freq": "10s",
+"optimization": {
+        "buildings": [
+           "SFH4"
+        ],
+        "models": [
+            "rule-based", 
+            "ideal", 
+            "ideal_rule_constGrid", 
+            "mpc_det_rule_constGrid"
+        ],
+"start_time": "2020-07-20T04:00:00+00:00",
+"end_time": "2020-07-27T04:00:00+00:00",
+        "gt_freq": "10s", 
         "gt_path": "01_data/prosumption_data/10sec", 
-        "mpc_update_freq": [15],
+        "mpc_update_freq": [60],
         "mpc_horizon": 24,
         "prices": "tou_prices.csv",
         "objective": "linear"
@@ -33,3 +40,5 @@
         "soe_initial": 4.0
     }
 }
+
+

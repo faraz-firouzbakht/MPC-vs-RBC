@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/farazfirouzbakht/Desktop/Programming/MPC-vs-RBC/MPC-vs-RBC/mlruns/609520425598582801/4a600a73032d49faaa9982070125b4e2/artifacts
+end_time: 1777899643117
+entry_point_name: ''
+experiment_id: '609520425598582801'
+lifecycle_stage: active
+run_id: 4a600a73032d49faaa9982070125b4e2
+run_name: ideal_freq-15_building-SFH4
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777899342616
+status: 3
+tags: []
+user_id: farazfirouzbakht
