@@ -68,7 +68,7 @@ class SimulationEngine:
             # 2. Determine next decision time
             t_next = t_now + self.mpc_delta
 
-            # 3. Apply decision with GT frequency between [t_now, t_next)
+# 3. Apply decision with GT frequency between [t_now, t_next)
             times = pd.date_range(start=t_now, end=t_next - self.gt_delta, freq=self.gt_delta)  # TODO: Check if this freq works correctly
             for t in times:
 
@@ -77,6 +77,11 @@ class SimulationEngine:
                 gt = self.gt_full.loc[t, 'P_TOT']
 
                 self.opt.update_soe(t, decision, gt)
+
+                # --- Prevent KeyError ---
+                if t not in self.opt.results_realization:
+                    continue
+                # ----------------------------------------------------
 
                 row = self.opt.results_realization[t]
                 row['solver_ok'] = bool(decision.get('solver_ok', True))

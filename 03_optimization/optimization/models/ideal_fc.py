@@ -21,7 +21,7 @@ class IdealOptimizer(MpcDetOptimizer):
 
 
             project_root = Path(__file__).resolve().parents[3]
-            print(f"\n🚀 === PROJECT ROOT IS: {project_root} === 🚀\n")
+            
 
             target_folder = self._custom_gt_path if self._custom_gt_path else f'01_data/prosumption_data/{self.mpc_freq}min'
             

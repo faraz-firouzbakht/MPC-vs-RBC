@@ -94,7 +94,7 @@ def main(config_path: str):
                     gt_full = gt_manager.get_gt(b)
                     gt_delta = gt_manager.gt_freq  # Use the GT frequency from the manager
 
-
+                        # ----- *********
                     optimizer = OptClass(
                         battery_cfg=config['battery'], 
                         mpc_freq=mpc_freq, 
@@ -164,7 +164,7 @@ def main(config_path: str):
 
 
                             # ---- evaluate & log metrics
-                            #battery_cfg added to ev for cost calculations that depend on battery characteristics (e.g. degradation costs)
+                            #battery_cfg added to ev for cost calculations that depend on battery characteristics (e.g. degradation costs) ***
                             ev = Evaluator(df_run, prices, battery_cfg=config['battery'])
                             costs_summary = ev.get_costs()
                             print(f"Costs summary for building {b} with model {opt_name} and MPC frequency {mpc_freq}: {costs_summary}")

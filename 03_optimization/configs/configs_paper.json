@@ -11,7 +11,7 @@
 
 "optimization": {
         "buildings": [
-           "SFH4"
+           "SFH14", "SFH16", "SFH18", "SFH19", "SFH22"
         ],
         "models": [
             "rule-based", 
@@ -20,9 +20,9 @@
             "mpc_det_rule_constGrid"
         ],
 "start_time": "2020-07-20T04:00:00+00:00",
-"end_time": "2020-07-27T04:00:00+00:00",
+"end_time": "2020-08-20T04:00:00+00:00",
         "gt_freq": "10s", 
-        "gt_path": "01_data/prosumption_data/10sec", 
+        "gt_path": "01_data/prosumption_data/10sec",
         "mpc_update_freq": [60],
         "mpc_horizon": 24,
         "prices": "tou_prices.csv",
@@ -40,5 +40,3 @@
         "soe_initial": 4.0
     }
 }
-
-

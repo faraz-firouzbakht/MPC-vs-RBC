@@ -5,13 +5,18 @@ from .models.ideal_fc import IdealOptimizer
 from .models.mpc_det_rule_based_constGrid import MpcRuleConstGridOptimizer
 from .models.mpc_det_rule_based_constGrid import IdealRuleConstGridOptimizer
 
+# Added mpc_det_rule_antiSwing.py
+from .models.mpc_det_rule_antiSwing import MpcRuleAntiSwingOptimizer
+
 class OptimizerRegistry:
     _registry = {
         'rule-based': RuleBasedOptimizer,
         'ideal': IdealOptimizer,
         'mpc_det_rule_constGrid': MpcRuleConstGridOptimizer,
-        'ideal_rule_constGrid': IdealRuleConstGridOptimizer
-
+        'ideal_rule_constGrid': IdealRuleConstGridOptimizer,
+        
+        # Register new law
+        'mpc_det_rule_antiSwing': MpcRuleAntiSwingOptimizer
     }
 
     @classmethod
