@@ -51,7 +51,10 @@ def main(config_path: str):
     fc_loader = ForecastLoader(config)
     fc_loader.validate_config()
 
-    mlflow.set_experiment(config.get("mlflow_experiment_name"))
+    # Keep MLflow runs in the same store regardless of the launch directory.
+    project_root = Path(__file__).resolve().parents[1]
+    mlflow.set_tracking_uri((project_root / "mlruns").as_uri())
+    mlflow.set_experiment(config["mlflow_experiment_name"])
     with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as tmp:
         json.dump(config, tmp, indent=2)
         tmp.flush()
