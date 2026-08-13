@@ -5,13 +5,13 @@
         "model": "AutoKAN",
         "fc_creation_time": "2025-08-17T10:13:28+00:00",
         "parametric_assumption": "sum2gaussian",
-        "fc_update_freq": 60,
+        "fc_update_freq": 15,
         "fc_path": "/home/ws/uliig/IAI_Project/MPC-vs-RBC/02_forecast/mount/storage_param_fc"
     },
 
 "optimization": {
         "buildings": [
-           "SFH27", "SFH28", "SFH29", "SFH30", "SFH32", "SFH36"
+           "SFH27", "SFH28"
         ],
         "models": [
             "rule-based", 
@@ -21,8 +21,8 @@
         ],
 "start_time": "2020-07-20T04:00:00+00:00",
 "end_time": "2020-12-20T04:00:00+00:00",
-        "gt_freq": "10s", 
-        "gt_path": "01_data/prosumption_data/10sec",
+        "gt_freq": "15min",
+        "gt_path": "01_data/prosumption_data/15min",
         "mpc_update_freq": [15],
         "mpc_horizon": 24,
         "prices": "tou_prices.csv",
