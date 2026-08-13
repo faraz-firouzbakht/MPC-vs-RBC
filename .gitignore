@@ -224,6 +224,8 @@ __marimo__/
 03_optimization/runs/
 03_optimization/evaluation/tables/
 mlruns/
+03_optimization/evaluation/cache/
+
 
 # ignore all .pdf files
 *.pdf
